@@ -1,0 +1,17 @@
+<html>
+
+<head></head>
+
+<body>
+  <mat-grid-list cols="4" rowHeight="202px">
+    <mat-grid-tile [colspan]="tile1.cols" [rowspan]="tile1.rows" [style.background]="tile1.color">
+      <app-side-tree class="side-tree"></app-side-tree>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="tile2.cols" [rowspan]="tile2.rows" [style.background]="tile2.color">text-area
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="tile3.cols" [rowspan]="tile3.rows" [style.background]="tile3.color">result-area
+    </mat-grid-tile>
+  </mat-grid-list>
+</body>
+
+</html>
