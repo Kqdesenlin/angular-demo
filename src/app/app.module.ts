@@ -14,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { GridListComponent } from './grid-list/grid-list.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { FormsModule } from '@angular/forms';
+import { CdkTreeModule } from '@angular/cdk/tree';
 
 
 
@@ -33,6 +35,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatButtonModule,
     MatGridListModule,
     ScrollingModule,
+    FormsModule,
+    CdkTreeModule,
     RouterModule.forRoot([
       { path: 'side-tree', component: SideTreeComponent },
       { path: 'heroes-list', component: HeroesListComponent },

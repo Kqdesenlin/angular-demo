@@ -1,100 +1,117 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, ChangeDetectionStrategy } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 
-
-interface FoodNode {
+// Interface used for representing a node of data
+export interface FakeNode {
   name: string;
-  children?: FoodNode[];
+  children: FakeNode[];
 }
 
-interface ExampleFlatNode {
-  expandable: boolean;
+const MAX_LEVELS = 3;
+const MAX_NODES_PER_LEVEL = 5;
+
+// Generates fake data
+@Injectable()
+export class RandomDataProvider {
+  data: FakeNode[] = [];
+
+  constructor() {
+    for (let i = 0; i < MAX_NODES_PER_LEVEL; i++) {
+      this.data.push(generateNode(0, i));
+    }
+  }
+}
+
+// Function for generating a fake data node
+function generateNode(level: number, index: number): FakeNode {
+  let children: FakeNode[] = [];
+  if (level < MAX_LEVELS) {
+    for (let i = 0; i < Math.round(Math.random() * MAX_NODES_PER_LEVEL); i++) {
+      children.push(generateNode(level + 1, i));
+    }
+  }
+
+  return {
+    name: 'level ' + level + ' index ' + index,
+    children,
+  };
+}
+
+// Interface used for representing a node of data within the flat tree component
+export interface FakeFlatNode {
   name: string;
   level: number;
+  hasChildren: boolean;
 }
 
-const TREE_DATA: FoodNode[] = [
-  {
-    name: 'Fruit',
-    children: [
-      { name: 'Apple' },
-      { name: 'Banana' },
-      { name: 'Fruit loops' },
-    ]
-  }, {
-    name: 'Vegetables',
-    children: [
-      {
-        name: 'Green',
-        children: [
-          { name: 'Broccoli' },
-          { name: 'Brussels sprouts' },
-        ]
-      }, {
-        name: 'Orange',
-        children: [
-          { name: 'Pumpkins' },
-          { name: 'Carrots' },
-        ]
-      },
-      {
-        name: 'Orange',
-        children: [
-          { name: 'Pumpkins' },
-          { name: 'Carrots' },
-        ]
-      },
-      {
-        name: 'Orange',
-        children: [
-          { name: 'Pumpkins' },
-          { name: 'Carrots' },
-        ]
-      },
-      {
-        name: 'Orange',
-        children: [
-          { name: 'Pumpkins' },
-          { name: 'Carrots' },
-        ]
-      },
-    ]
-  },
-];
-
-
+// Component containing virtual scrolling flat tree 
 @Component({
   selector: 'app-side-tree',
   templateUrl: './side-tree.component.html',
-  styleUrls: ['./side-tree.component.css']
+  styleUrls: ['./side-tree.component.css'],
+  providers: [RandomDataProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SideTreeComponent implements OnInit {
+export class SideTreeComponent {
+  // Provided generated data
+  readonly providedData = this.dataProvider.data;
+  // Tree control to feed to the cdk tree 
+  readonly treeControl: FlatTreeControl<FakeFlatNode> =
+    new FlatTreeControl<FakeFlatNode>(getNodeLevel, getIsNodeExpandable);
+  // Data source fed into the cdk tree control 
+  readonly dataSource: MatTreeFlatDataSource<FakeNode, FakeFlatNode>;
 
-  private _transformer = (node: FoodNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
+  constructor(readonly dataProvider: RandomDataProvider) {
+    // Tells tree data source builder how to flatten our nested node data into flat nodes
+    const treeFlattener =
+      new MatTreeFlattener<FakeNode, FakeFlatNode>(
+        nodeTransformer,
+        getNodeLevel,
+        getIsNodeExpandable,
+        getNodeChildren,
+      );
+    // Populates our flattened data into the tree control
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, treeFlattener);
+    this.dataSource.data = this.providedData;
+    console.log(this.dataSource.data);
   }
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level, node => node.expandable);
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer, node => node.level, node => node.expandable, node => node.children);
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  constructor() {
-    this.dataSource.data = TREE_DATA;
+  // Number of dom nodes rendered in the virtually scrolling tree
+  get numTreeNodes() {
+    return document.querySelectorAll('.node').length;
   }
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
-
-
-  ngOnInit(): void {
+  // Number of dom nodes rendered in the non-virtually scrolling cdk-tree
+  get numCdkTreeNodes() {
+    return document.querySelectorAll('cdk-tree-node').length;
   }
 
+  hasChild(index: number, nodeData: FakeFlatNode) {
+    return getIsNodeExpandable(nodeData);
+  }
+}
+
+// Function that maps a nested node to a flat node
+function nodeTransformer(node: FakeNode, level: number) {
+  return {
+    name: node.name,
+    level,
+    hasChildren: node.children.length > 0,
+  };
+}
+
+// Function that gets a flat node's level
+function getNodeLevel({ level }: FakeFlatNode) {
+  return level;
+}
+
+// Function that determines whether a flat node is expandable or not
+function getIsNodeExpandable({ hasChildren }: FakeFlatNode) {
+  return hasChildren;
+}
+
+// Function that returns a nested node's list of children 
+function getNodeChildren({ children }: FakeNode) {
+  return children;
 }
