@@ -1,0 +1,14 @@
+.textarea-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .textarea-full-width {
+    width: 100%;
+  }
+
+  .textarea-main {
+    height: 100%;
+    width: 100%;
+  }
