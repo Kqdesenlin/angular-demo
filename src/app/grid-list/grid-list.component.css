@@ -3,3 +3,18 @@
     float: left;
     height: 100%;
 }
+.side-tree-container{
+    border-style: solid;
+  border-color: red;
+}
+.text-area-container{
+    border-style: solid;
+  border-color: green;
+}
+.table-container{
+    border-style: dotted;
+  border-color: blue;
+}
+.data-table{
+    width: 100%;
+}

@@ -20,6 +20,10 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatInputModule } from '@angular/material/input';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { DataTableComponent } from './data-table/data-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -31,7 +35,8 @@ import { MatInputModule } from '@angular/material/input';
     HeroesListComponent,
     PageNotFoundComponent,
     GridListComponent,
-    TextAreaComponent
+    TextAreaComponent,
+    DataTableComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +50,9 @@ import { MatInputModule } from '@angular/material/input';
     CdkTreeModule,
     MatInputModule,
     ReactiveFormsModule,
+    TextFieldModule,
+    MatTableModule,
+    HttpClientModule,
     RouterModule.forRoot([
       { path: 'side-tree', component: SideTreeComponent },
       { path: 'heroes-list', component: HeroesListComponent },

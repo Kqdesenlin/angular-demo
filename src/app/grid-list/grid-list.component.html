@@ -4,14 +4,17 @@
 
 <body>
   <mat-grid-list cols="4" rowHeight="202px">
-    <mat-grid-tile [colspan]="tile1.cols" [rowspan]="tile1.rows" [style.background]="tile1.color">
+    <mat-grid-tile class="side-tree-container" [colspan]="tile1.cols" [rowspan]="tile1.rows">
       <app-side-tree class="side-tree"></app-side-tree>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="tile2.cols" [rowspan]="tile2.rows" [style.background]="tile2.color">
+    <mat-grid-tile class="text-area-container" [colspan]="tile2.cols" [rowspan]="tile2.rows">
       <app-text-area class="text-area">
       </app-text-area>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="tile3.cols" [rowspan]="tile3.rows" [style.background]="tile3.color">result-area
+    <mat-grid-tile class="table-container" [colspan]="tile3.cols" [rowspan]="tile3.rows">
+      <app-data-table class="data-table">
+
+      </app-data-table>
     </mat-grid-tile>
   </mat-grid-list>
 </body>

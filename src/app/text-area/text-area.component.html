@@ -1,8 +1,9 @@
 <form class="textarea-form">
   <mat-form-field class="textarea-full-width">
-    <mat-label>Email</mat-label>
-    <textarea class="textarea-main" type="text" matInput="" [formControl]="textFormControl"
-      placeholder="select * from ...">
+    <mat-label>SQL</mat-label>
+    <textarea class="textarea-main" matInput cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+      type="text" [formControl]="textFormControl" placeholder="select * from ..." [(ngModel)]="scansql">
+      {{scansql}}
       </textarea>
     <mat-error *ngIf="textFormControl.hasError('text') && !textFormControl.hasError('required')">
       Please enter a valid sql
@@ -12,3 +13,4 @@
     </mat-error>
   </mat-form-field>
 </form>
+<button mat-raised-button (click)="submit()">提交</button>
