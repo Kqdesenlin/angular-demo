@@ -5,7 +5,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
-import { OperateResult } from './operate-result';
+import { OperateResult, ResultCode } from './operate-result';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -15,19 +16,28 @@ const httpOptions = {
 };
 @Injectable()
 export class HttpGetService {
-  getSqlPath = 'localhost:8080/api/sql';
+  getSqlPath = 'http://localhost:8080/api/sql';
   operateResult = '';
   getRtn = '';
+  headers = new HttpHeaders({ 'Access-Control-Allow-Origin': '*' })
   constructor(private http: HttpClient,
   ) {
   }
 
   getSql(sql: string) {
     const params = new HttpParams()
-      .set('sql', sql);
-    this.http.get<OperateResult>(this.getSqlPath, { params })
-      .subscribe((data: OperateResult) => this.getRtn = data.info);
-    console.log(this.getRtn);
-  }
+      .set("sql", sql);
 
+    let temp: OperateResult;
+    this.http.post<OperateResult>(this.getSqlPath, { "sql": sql })
+      .subscribe((data: OperateResult) => {
+        temp.info = data.info;
+        temp.rtn = data.rtn;
+        temp.code = data.code;
+      });
+  }
+  postSql(sql: string) {
+    return this.http.post<OperateResult[]>(this.getSqlPath, { "sql": sql });
+
+  }
 }

@@ -1,0 +1,16 @@
+<mat-accordion class="text-result-main" multi>
+  <div *ngFor="let result of results">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{result.code}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{result.info}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <p>{{result.rtn}}</p>
+    </mat-expansion-panel>
+  </div>
+</mat-accordion>

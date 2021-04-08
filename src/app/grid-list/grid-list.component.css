@@ -18,3 +18,8 @@
 .data-table{
     width: 100%;
 }
+.text-result{
+  width: 100%;
+  position: absolute;
+  top: 0px;
+}

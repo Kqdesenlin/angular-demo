@@ -8,6 +8,7 @@ import { HeroesListComponent } from './heroes-list/heroes-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { GridListComponent } from './grid-list/grid-list.component';
 import { TextAreaComponent } from './text-area/text-area.component';
+import { TextResultComponent } from './text-result/text-result.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSliderModule } from '@angular/material/slider';
@@ -24,6 +25,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { DataTableComponent } from './data-table/data-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 
@@ -36,7 +38,8 @@ import { HttpClientModule } from '@angular/common/http';
     PageNotFoundComponent,
     GridListComponent,
     TextAreaComponent,
-    DataTableComponent
+    DataTableComponent,
+    TextResultComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +56,7 @@ import { HttpClientModule } from '@angular/common/http';
     TextFieldModule,
     MatTableModule,
     HttpClientModule,
+    MatExpansionModule,
     RouterModule.forRoot([
       { path: 'side-tree', component: SideTreeComponent },
       { path: 'heroes-list', component: HeroesListComponent },

@@ -8,13 +8,18 @@
       <app-side-tree class="side-tree"></app-side-tree>
     </mat-grid-tile>
     <mat-grid-tile class="text-area-container" [colspan]="tile2.cols" [rowspan]="tile2.rows">
-      <app-text-area class="text-area">
+
+      <app-text-area class="text-area" (resultChanged)="sqlexecute($event)">
       </app-text-area>
+
     </mat-grid-tile>
     <mat-grid-tile class="table-container" [colspan]="tile3.cols" [rowspan]="tile3.rows">
-      <app-data-table class="data-table">
 
+      <app-data-table class="data-table" *ngIf="isTableActive">
       </app-data-table>
+
+      <app-text-result class="text-result" *ngIf="!isTableActive" [results]="transResults">
+      </app-text-result>
     </mat-grid-tile>
   </mat-grid-list>
 </body>

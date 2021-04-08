@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OperateResult } from '../service/operate-result';
 
 export interface Tile {
   color: string;
@@ -18,9 +19,22 @@ export class GridListComponent implements OnInit {
   tile2 = { text: 'Two', cols: 3, rows: 1, color: 'lightgreen' }
   tile3 = { text: 'Three', cols: 3, rows: 2, color: 'lightpink' }
 
-  constructor() { }
+  isTableActive = false;
+
+  sqlResult: OperateResult | undefined;
+
+  transResults: OperateResult[] | undefined;
+  constructor() {
+
+  }
 
   ngOnInit() {
+
+  }
+
+  sqlexecute(newResult: OperateResult[]) {
+    console.log(newResult);
+    this.transResults = newResult;
   }
 
 }
