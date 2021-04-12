@@ -5,7 +5,7 @@
 <body>
   <mat-grid-list cols="4" rowHeight="202px">
     <mat-grid-tile class="side-tree-container" [colspan]="tile1.cols" [rowspan]="tile1.rows">
-      <app-side-tree class="side-tree"></app-side-tree>
+      <app-side-tree class="side-tree" [providedData]="updateTable"></app-side-tree>
     </mat-grid-tile>
     <mat-grid-tile class="text-area-container" [colspan]="tile2.cols" [rowspan]="tile2.rows">
 
@@ -15,7 +15,7 @@
     </mat-grid-tile>
     <mat-grid-tile class="table-container" [colspan]="tile3.cols" [rowspan]="tile3.rows">
 
-      <app-data-table class="data-table" *ngIf="isTableActive">
+      <app-data-table class="data-table" *ngIf="isTableActive" [results]="selectResult">
       </app-data-table>
 
       <app-text-result class="text-result" *ngIf="!isTableActive" [results]="transResults">

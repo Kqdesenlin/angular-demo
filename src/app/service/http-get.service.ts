@@ -2,11 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { OperateResult, FakeNode } from './operate-result';
 
-import { OperateResult, ResultCode } from './operate-result';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -35,6 +32,10 @@ export class HttpGetService {
         temp.rtn = data.rtn;
         temp.code = data.code;
       });
+  }
+
+  getTableData() {
+    return this.http.get<FakeNode[]>("http://localhost:8080/api/data");
   }
   postSql(sql: string) {
     return this.http.post<OperateResult[]>(this.getSqlPath, { "sql": sql });

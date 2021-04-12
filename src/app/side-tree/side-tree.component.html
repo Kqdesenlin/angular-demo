@@ -1,5 +1,3 @@
-<button (click)="treeControl.expandAll()">Expand all</button>
-<button (click)="treeControl.collapseAll()">Collapse all</button>
 <div class="virtual-scroll-container">
   <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding cdkTreeNodePaddingIndent="24">
@@ -13,4 +11,3 @@
     </cdk-tree-node>
   </cdk-tree>
 </div>
-<div>Number of cdk-tree-node elements rendered: {{ numCdkTreeNodes }}</div>

@@ -1,12 +1,12 @@
-import { Component, Injectable, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Injectable, ChangeDetectionStrategy, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { HttpGetService } from '../service/http-get.service';
+import { FakeNode } from '../service/operate-result';
+import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
 
 // Interface used for representing a node of data
-export interface FakeNode {
-  name: string;
-  children: FakeNode[];
-}
+
 
 const MAX_LEVELS = 3;
 const MAX_NODES_PER_LEVEL = 5;
@@ -14,12 +14,31 @@ const MAX_NODES_PER_LEVEL = 5;
 // Generates fake data
 @Injectable()
 export class RandomDataProvider {
-  data: FakeNode[] = [];
+  public treeData: FakeNode[] = [];
 
   constructor() {
-    for (let i = 0; i < MAX_NODES_PER_LEVEL; i++) {
-      this.data.push(generateNode(0, i));
-    }
+    let column1: FakeNode = { "name": "cityName", "children": [] };
+    let column2: FakeNode = { "name": "localRate", "children": [] };
+    let column11: FakeNode = {
+      "name": "column", "children": [column1, column2]
+    };
+    let index1: FakeNode = { "name": "cityName_index", "children": [] };
+    let index11: FakeNode = { "name": "index", "children": [index1] };
+    let table1: FakeNode = {
+      "name": "city", "children": [column11, index11]
+    };
+    let column21: FakeNode = { "name": "cityName", "children": [] };
+    let column22: FakeNode = { "name": "localRate", "children": [] };
+    let column211: FakeNode = {
+      "name": "column", "children": [column21, column22]
+    };
+    let index21: FakeNode = { "name": "cityName_index", "children": [] };
+    let index211: FakeNode = { "name": "index", "children": [index21] };
+    let table2: FakeNode = {
+      "name": "city", "children": [column211, index211]
+    };
+    this.treeData.push(table1);
+    this.treeData.push(table2);
   }
 }
 
@@ -45,25 +64,27 @@ export interface FakeFlatNode {
   hasChildren: boolean;
 }
 
-// Component containing virtual scrolling flat tree 
+
 @Component({
   selector: 'app-side-tree',
   templateUrl: './side-tree.component.html',
   styleUrls: ['./side-tree.component.css'],
-  providers: [RandomDataProvider],
+  providers: [RandomDataProvider, HttpGetService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SideTreeComponent {
-  // Provided generated data
-  readonly providedData = this.dataProvider.data;
-  // Tree control to feed to the cdk tree 
+export class SideTreeComponent implements OnInit, OnChanges {
+
+  // providedData: FakeNode[] = this.dataProvider.treeData;
+
+  @Input() providedData: FakeNode[] = [];
+
   readonly treeControl: FlatTreeControl<FakeFlatNode> =
     new FlatTreeControl<FakeFlatNode>(getNodeLevel, getIsNodeExpandable);
-  // Data source fed into the cdk tree control 
+
   readonly dataSource: MatTreeFlatDataSource<FakeNode, FakeFlatNode>;
 
-  constructor(readonly dataProvider: RandomDataProvider) {
-    // Tells tree data source builder how to flatten our nested node data into flat nodes
+  constructor(readonly dataProvider: RandomDataProvider, private httpService: HttpGetService) {
+
     const treeFlattener =
       new MatTreeFlattener<FakeNode, FakeFlatNode>(
         nodeTransformer,
@@ -71,47 +92,63 @@ export class SideTreeComponent {
         getIsNodeExpandable,
         getNodeChildren,
       );
-    // Populates our flattened data into the tree control
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, treeFlattener);
-    this.dataSource.data = this.providedData;
-    console.log(this.dataSource.data);
+
+    this.httpService.getTableData().subscribe((data: FakeNode[]) => {
+      console.log(data);
+      this.providedData = data;
+      console.log(this.providedData);
+      this.dataSource.data = this.providedData;
+      console.log(this.dataSource.data);
+    });
+
   }
 
-  // Number of dom nodes rendered in the virtually scrolling tree
-  get numTreeNodes() {
-    return document.querySelectorAll('.node').length;
-  }
 
-  // Number of dom nodes rendered in the non-virtually scrolling cdk-tree
-  get numCdkTreeNodes() {
-    return document.querySelectorAll('cdk-tree-node').length;
-  }
 
   hasChild(index: number, nodeData: FakeFlatNode) {
     return getIsNodeExpandable(nodeData);
   }
+
+
+
+  transColumn() {
+
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.dataSource.data = this.providedData;
+  }
+  ngOnInit() {
+    this.httpService.getTableData().subscribe((data: FakeNode[]) => {
+      this.providedData = data;
+    });
+  }
+
+
+
 }
 
-// Function that maps a nested node to a flat node
+
 function nodeTransformer(node: FakeNode, level: number) {
   return {
     name: node.name,
     level,
-    hasChildren: node.children.length > 0,
+    hasChildren: node.children != null,
   };
 }
 
-// Function that gets a flat node's level
+
 function getNodeLevel({ level }: FakeFlatNode) {
   return level;
 }
 
-// Function that determines whether a flat node is expandable or not
+
 function getIsNodeExpandable({ hasChildren }: FakeFlatNode) {
   return hasChildren;
 }
 
-// Function that returns a nested node's list of children 
+
 function getNodeChildren({ children }: FakeNode) {
   return children;
 }

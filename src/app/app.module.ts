@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { SideTreeComponent } from './side-tree/side-tree.component';
-import { HeroesListComponent } from './heroes-list/heroes-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { GridListComponent } from './grid-list/grid-list.component';
 import { TextAreaComponent } from './text-area/text-area.component';
@@ -34,7 +33,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
   declarations: [
     AppComponent,
     SideTreeComponent,
-    HeroesListComponent,
     PageNotFoundComponent,
     GridListComponent,
     TextAreaComponent,
@@ -59,7 +57,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatExpansionModule,
     RouterModule.forRoot([
       { path: 'side-tree', component: SideTreeComponent },
-      { path: 'heroes-list', component: HeroesListComponent },
       { path: '', redirectTo: '/heroes-list', pathMatch: 'full' },
       { path: 'grid-list', component: GridListComponent },
       { path: '**', component: PageNotFoundComponent },

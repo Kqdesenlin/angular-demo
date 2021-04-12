@@ -23,6 +23,7 @@ export class TextAreaComponent implements OnInit {
   textFormControl = new FormControl('', [
     Validators.required
   ])
+
   constructor(
     private httpService: HttpGetService,
   ) {

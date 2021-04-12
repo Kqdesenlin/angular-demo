@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { SelectResult } from '../service/operate-result';
 
 export interface SqlElement {
   name: string;
@@ -24,10 +25,13 @@ const ELEMENT_DATA: SqlElement[] = [
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.css']
 })
-export class DataTableComponent implements OnInit {
+export class DataTableComponent implements OnInit, OnChanges {
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
+  @Input() results: SelectResult = { "columnTemplate": [], "rowTemplate": [] };
+
+  dataSource = [];
+  displayedColumns: string[] = [];
+
 
   onTableScroll(e: any) {
     const tableViewHeight = e.target.offsetHeight // viewport: ~500px
@@ -38,13 +42,21 @@ export class DataTableComponent implements OnInit {
     const buffer = 200;
     const limit = tableScrollHeight - tableViewHeight - buffer;
     if (scrollLocation > limit) {
-      this.dataSource = this.dataSource.concat(ELEMENT_DATA);
+      this.dataSource = this.dataSource.concat(this.dataSource);
     }
   }
 
   constructor() { }
 
   ngOnInit() {
+
+
+  }
+
+  ngOnChanges() {
+    console.log(this.results);
+    this.dataSource = this.results.rowTemplate;
+    this.displayedColumns = this.results.columnTemplate;
   }
 
 }
