@@ -1,8 +1,15 @@
 <form class="textarea-form">
-  <mat-form-field class="textarea-full-width">
-    <mat-label>SQL</mat-label>
-    <textarea class="textarea-main" matInput cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-      type="text" [formControl]="textFormControl" placeholder="select * from ..." [(ngModel)]="scansql">
+
+  <div class="button-list">
+    <button class="add-button" mat-raised-button (click)="prepared()">窗口</button>
+    <button class="add-button" mat-raised-button (click)="createTable()">建表</button>
+    <button class="add-button" mat-raised-button (click)="updateTable()">修改表结构</button>
+    <button class="add-button" mat-raised-button (click)="submit()">提交</button>
+  </div>
+  <mat-form-field class="textarea-full-width" *ngIf="showScan">
+    <mat-label style="font-size: 20px;">SQL</mat-label>
+    <textarea class="textarea-main" matInput cdkTextareaAutosize cdkAutosizeMinRows="20" type="text"
+      [formControl]="textFormControl" placeholder="select * from ..." [(ngModel)]="scansql">
       {{scansql}}
       </textarea>
     <mat-error *ngIf="textFormControl.hasError('text') && !textFormControl.hasError('required')">
@@ -12,5 +19,100 @@
       sql is <strong>required</strong>
     </mat-error>
   </mat-form-field>
+
+  <div class="create-table-container" *ngIf="showCreateTable">
+    <mat-form-field appearance="outline">
+      <mat-label>Enter table name</mat-label>
+      <input matInput placeholder="new_table" [formControl]="createTableName" [(ngModel)]="scanTableName" name="first">
+      <mat-error *ngIf="createTableName.invalid">{{getCreateTableErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="primary" style="margin-left: 20px;" (click)="addColumn()">add columns</button>
+    <button mat-raised-button color="primary" style="margin-left: 20px;" (click)="addTable()">sumbit</button>
+
+    <mat-nav-list style="overflow: auto;height:180px;margin-top: -20px;">
+      <mat-list-item class="mat-list-each" *ngFor="let column of addColumns">
+        <input matInput placeholder="new_column" [(ngModel)]="column.name" name="second"
+          [ngModelOptions]="{standalone: true}" style="width: 200px;float: left;">
+        <div style="font-size: 10px;height: 45px;float: right;">
+          <mat-form-field appearance="outline" style="width: 100%;float: right;margin-right: -100px;">
+            <mat-label name="mat-label-var1" style="font-size: 10px;">type</mat-label>
+            <mat-select name="mat-label-var2" [(ngModel)]="column.type">
+              <mat-option *ngFor="let eachone of parameterTypes" [value]="eachone">
+                {{eachone}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div style="font-size: 10px;height: 45px;float: right;margin-right: 20px;">
+          <mat-form-field appearance="outline" style="width: 40%;float: right;">
+            <input matInput name="mat-label-var3" placeholder="parameter" [(ngModel)]="column.parameter">
+          </mat-form-field>
+        </div>
+        <mat-checkbox [(ngModel)]="column.notNull" name="notnull" style="float: right;margin-top: 0px;">not null
+        </mat-checkbox>
+        <mat-checkbox [(ngModel)]="column.unique" name="unique" style="margin-left: 10px;float:right;margin-top: 0px;">
+          unique
+        </mat-checkbox>
+        <mat-checkbox [(ngModel)]="column.primaryKey" name="primarykey"
+          style="margin-left: 10px;float: right;margin-top: 0px;">
+          primaykey</mat-checkbox>
+        <div class="margin-left:20px;">
+          <button mat-raised-button color="warn" (click)="deleteColumn(column.index)"
+            style="margin-left:20px;width: 40px !important;min-width: unset!important;height: 30px;">X</button>
+        </div>
+      </mat-list-item>
+    </mat-nav-list>
+  </div>
+
+
+  <div class="update-table-container" *ngIf="showUpdateTable">
+    <mat-form-field appearance="outline">
+      <mat-label name="mat-label-var3" style="font-size: 10px;">table</mat-label>
+      <mat-select name="mat-label-var4" [(ngModel)]="selectTableName" (selectionChange)="updateTableNameChange($event)">
+        <mat-option *ngFor="let eachone of getUpdateTable" [value]="eachone.name">
+          {{eachone.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" style="margin-left: 20px;" (click)="setTable()">sumbit</button>
+
+
+    <mat-nav-list style="overflow: auto;height:180px;margin-top: -20px;">
+      <mat-list-item class="mat-list-each" *ngFor="let column of selectUpdateTable.columns">
+        <input matInput [(ngModel)]="column.columnName" name="second" [ngModelOptions]="{standalone: true}"
+          style="width: 200px;float: left;" value="column.columnName">
+
+        <div style="font-size: 10px;height: 45px;float: right;">
+          <mat-form-field appearance="outline" style="width: 100%;float: right;margin-right: -100px;">
+            <mat-label name="mat-label-var1" style="font-size: 10px;">type</mat-label>
+            <mat-select name="mat-label-var2" [(ngModel)]="column.columnType">
+              <mat-option *ngFor="let eachone of parameterTypes" [value]="eachone">
+                {{eachone}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div style="font-size: 10px;height: 45px;float: right;margin-right: 20px;">
+          <mat-form-field appearance="outline" style="width: 40%;float: right;">
+            <input matInput name="mat-label-var3" placeholder="parameter" [(ngModel)]="column.columnArgument">
+          </mat-form-field>
+        </div>
+        <mat-checkbox [(ngModel)]="column.notNull" name="notnull" style="float: right;margin-top: 0px;">not null
+        </mat-checkbox>
+        <mat-checkbox [(ngModel)]="column.unique" name="unique" style="margin-left: 10px;float:right;margin-top: 0px;">
+          unique
+        </mat-checkbox>
+        <mat-checkbox [(ngModel)]="column.primaryKey" name="primarykey"
+          style="margin-left: 10px;float: right;margin-top: 0px;">
+          primaykey</mat-checkbox>
+        <div class="margin-left:20px;">
+          <button mat-raised-button color="warn" (click)="deleteColumn(column.index)"
+            style="margin-left:20px;width: 40px !important;min-width: unset!important;height: 30px;">X</button>
+        </div>
+      </mat-list-item>
+    </mat-nav-list>
+
+  </div>
+
+
 </form>
-<button mat-raised-button (click)="submit()">提交</button>

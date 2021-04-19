@@ -1,9 +1,10 @@
 .virtual-scroll-container {
-    border: 2px solid cyan;
-    height: 400px;
-    overflow: auto;
-  }
-  
-  cdk-tree-node {
-    display: block;
-  }
+  height: 100%;
+  overflow: auto;
+}
+
+mat-tree-node {
+  display: block;
+  height:10px;
+  border-bottom: gainsboro solid 1px;
+}

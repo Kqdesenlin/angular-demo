@@ -16,9 +16,9 @@ export interface Tile {
 })
 export class GridListComponent implements OnInit {
 
-  tile1 = { text: 'One', cols: 1, rows: 3, color: 'lightblue' }
-  tile2 = { text: 'Two', cols: 3, rows: 1, color: 'lightgreen' }
-  tile3 = { text: 'Three', cols: 3, rows: 2, color: 'lightpink' }
+  tile1 = { text: 'One', cols: 1, rows: 6, color: 'lightblue' }
+  tile2 = { text: 'Two', cols: 3, rows: 3, color: 'lightgreen' }
+  tile3 = { text: 'Three', cols: 3, rows: 3, color: 'lightpink' }
 
   isTableActive = false;
 
@@ -45,6 +45,7 @@ export class GridListComponent implements OnInit {
       this.selectResult = newResult[0].rtn;
       console.log(this.selectResult);
     } else {
+      this.isTableActive = false;
       console.log(newResult.length);
       console.log(newResult);
       this.transResults = newResult;

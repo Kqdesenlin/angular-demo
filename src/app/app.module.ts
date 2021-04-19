@@ -25,6 +25,14 @@ import { DataTableComponent } from './data-table/data-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatListModule } from '@angular/material/list';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+
+
 
 
 
@@ -55,6 +63,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatTableModule,
     HttpClientModule,
     MatExpansionModule,
+    MatPaginatorModule,
+    MatListModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDialogModule,
     RouterModule.forRoot([
       { path: 'side-tree', component: SideTreeComponent },
       { path: '', redirectTo: '/heroes-list', pathMatch: 'full' },

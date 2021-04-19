@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 
-import { OperateResult, FakeNode } from './operate-result';
+import { OperateResult, FakeNode, UpdateTableInfo } from './operate-result';
 
 
 const httpOptions = {
@@ -39,6 +39,8 @@ export class HttpGetService {
   }
   postSql(sql: string) {
     return this.http.post<OperateResult[]>(this.getSqlPath, { "sql": sql });
-
+  }
+  getUpdateTableData() {
+    return this.http.get<UpdateTableInfo[]>("http://localhost:8080/api/updatedata");
   }
 }

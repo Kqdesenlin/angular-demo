@@ -2,11 +2,58 @@
   position: relative;
     top: 0px;
     left: 0px;
+    max-height: 500px;
   }
   
   .textarea-full-width {
     width: 900px;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    padding-left:15px;
+    padding-top:10px;
+    padding-right:30px;
+  }
+  .create-table-container{
+    width: 900px;
+    height: 100%;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    padding-left:15px;
+    padding-top:10px;
+    padding-right:30px;
+
+  }
+  .update-table-container{
+    width: 900px;
+    height: 100%;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    padding-left:15px;
+    padding-top:10px;
+    padding-right:30px;
+  }
+  .create-table-container-list{
+    width: 100%;
+
   }
 
   .textarea-main {
+    font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu;
+    font-size:20px;
+  }
+  .button-list{
+    height:40px;
+    margin: 5px;
+  }
+  .button-list button {
+    margin-right: 10px;
+  }
+  .create-column-list{
+    width: 100%;
+  }
+  .mat-list-each{
+    border: steelblue solid 1px;
+    border-radius: 10px;
+    margin-top:3px;
+    max-width: 98%;
   }

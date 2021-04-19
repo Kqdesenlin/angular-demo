@@ -1,12 +1,18 @@
 .example-container {
-    display: flex;
-    flex-direction: column;
-    max-height: 500px;
-    min-width: 100%;
-  }
-  
-  .mat-table {
-    overflow: auto;
-    max-height: 500px;
-  }
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  min-width: 100%;
+}
+
+.mat-table {
+  max-height: 500px;
+}
+.table-row{
+  height: 30px !important;
+}
+.mat-row{ min-height: 40px; }
+.mat-header-row{
+  min-height:50px;
+}
   
