@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { HttpGetService } from '../service/http-get.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { OperateResult, ColumnInfo, UpdateTableInfo } from '../service/operate-result';
+import { OperateResult, ColumnInfo, UpdateTableInfo, ColumnInfoDto } from '../service/operate-result';
 import { Event } from '@angular/router';
 
 
@@ -117,11 +117,33 @@ export class TextAreaComponent implements OnInit {
     this.addColumns.push(column);
   }
 
+  addUpdateColumn() {
+    let column: ColumnInfoDto = {
+      "columnName": "",
+      "columnType": "",
+      "columnArgument": 0,
+      "notNull": false,
+      "unique": false,
+      "primaryKey": false,
+      "index": this.selectUpdateTable.columns.length + 1
+    }
+    this.selectUpdateTable.columns.push(column);
+  }
   deleteColumn(index: number) {
     console.log(index);
     for (var var1 = 0; var1 < this.addColumns.length; ++var1) {
       if (this.addColumns[var1].index == index) {
         this.addColumns.splice(var1, 1);
+        break;
+      }
+    }
+  }
+
+  deleteUpdateColumn(index: number) {
+    console.log(index);
+    for (let var1 = 0; var1 < this.selectUpdateTable.columns.length; ++var1) {
+      if (this.selectUpdateTable.columns[var1].index == index) {
+        this.selectUpdateTable.columns.splice(var1, 1);
         break;
       }
     }
@@ -142,7 +164,7 @@ export class TextAreaComponent implements OnInit {
   updateTableNameChange(event: any) {
     for (let var1 = 0; var1 < this.getUpdateTable.length; ++var1) {
       if (this.getUpdateTable[var1].name == event.value) {
-        this.selectUpdateTable = this.getUpdateTable[var1];
+        this.selectUpdateTable = JSON.parse(JSON.stringify(this.getUpdateTable[var1]));
         for (let var2 = 0; var2 < this.selectUpdateTable.columns.length; ++var2) {
           this.selectUpdateTable.columns[var2].index = var2 + 1;
         }
@@ -186,7 +208,69 @@ export class TextAreaComponent implements OnInit {
   }
 
   setTable() {
+    let updateSql = "alter table " + this.selectTableName;
+    let oldUpdateTableColumn: ColumnInfoDto[] = [];
+    for (let var1 = 0; var1 < this.getUpdateTable.length; ++var1) {
+      if (this.getUpdateTable[var1].name == this.selectTableName) {
+        oldUpdateTableColumn = JSON.parse(JSON.stringify(this.getUpdateTable[var1].columns));
+      }
+    }
+    console.log(oldUpdateTableColumn);
+    //先删
+    for (let var1 = 0; var1 < oldUpdateTableColumn.length; ++var1) {
+      let var2 = 0;
+      for (; var2 < this.selectUpdateTable.columns.length; ++var2) {
+        if (oldUpdateTableColumn[var1].columnName == this.selectUpdateTable.columns[var2].columnName) {
+          break;
+        }
+      }
 
+      if (var2 == this.selectUpdateTable.columns.length) {
+        let tempDropSql: string = "drop column " + oldUpdateTableColumn[var1].columnName + " ,";
+        updateSql = updateSql.concat(tempDropSql);
+      }
+
+    }
+    //再修改
+
+    for (let var3 = 0; var3 < oldUpdateTableColumn.length; ++var3) {
+      let var4 = 0;
+      for (; var4 < this.selectUpdateTable.columns.length; ++var4) {
+        if (oldUpdateTableColumn[3].columnName == this.selectUpdateTable.columns[var4].columnName) {
+          let tempAlterSql: string = "alter column " + this.selectUpdateTable.columns[var4].columnName;
+          let type = this.selectUpdateTable.columns[var4].columnType;
+          let parameter = this.selectUpdateTable.columns[var4].columnArgument;
+          tempAlterSql = tempAlterSql + " " + type;
+          //添加类型
+          if (type == 'VARCHAR' || type == 'CHAR') {
+            if (parameter != null) {
+              tempAlterSql = tempAlterSql.concat("(" + parameter + ") ");
+            } else {
+              tempAlterSql = tempAlterSql.concat("(" + "10" + ") ");
+            }
+          } else {
+            tempAlterSql = tempAlterSql + " ";
+          }
+
+          //添加特殊类型
+          if (true == this.selectUpdateTable.columns[var4].notNull) {
+            tempAlterSql = tempAlterSql.concat("not null ");
+          }
+          if (true == this.selectUpdateTable.columns[var4].unique) {
+            tempAlterSql = tempAlterSql.concat("unique ");
+          }
+          tempAlterSql = tempAlterSql.concat(",");
+          updateSql = updateSql.concat(tempAlterSql);
+        }
+      }
+    }
+    //最后添加
+    for (let var5 = 0; var5 < oldUpdateTableColumn.length; ++var5) {
+      let var6 = 0;
+      for (; var6 < this.selectUpdateTable.columns.length; ++var6) {
+        if
+      }
+    }
   }
   openDialog(input: string): void {
     const dialogRef = this.dialog.open(DialogOverviewDialog, {
