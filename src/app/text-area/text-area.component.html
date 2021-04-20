@@ -74,6 +74,8 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <button mat-raised-button color="primary" style="margin-left: 20px;" (click)="addUpdateColumn()">add
+      columns</button>
     <button mat-raised-button color="primary" style="margin-left: 20px;" (click)="setTable()">sumbit</button>
 
 
@@ -85,7 +87,8 @@
         <div style="font-size: 10px;height: 45px;float: right;">
           <mat-form-field appearance="outline" style="width: 100%;float: right;margin-right: -100px;">
             <mat-label name="mat-label-var1" style="font-size: 10px;">type</mat-label>
-            <mat-select name="mat-label-var2" [(ngModel)]="column.columnType">
+            <mat-select name="mat-label-var2" [(ngModel)]="column.columnType" value="column.columnType"
+              [ngModelOptions]="{standalone: true}">
               <mat-option *ngFor="let eachone of parameterTypes" [value]="eachone">
                 {{eachone}}
               </mat-option>
@@ -94,19 +97,22 @@
         </div>
         <div style="font-size: 10px;height: 45px;float: right;margin-right: 20px;">
           <mat-form-field appearance="outline" style="width: 40%;float: right;">
-            <input matInput name="mat-label-var3" placeholder="parameter" [(ngModel)]="column.columnArgument">
+            <input matInput name="mat-label-var3" placeholder="parameter" [(ngModel)]="column.columnArgument"
+              [ngModelOptions]="{standalone: true}" value="column.columnArgument">
           </mat-form-field>
         </div>
-        <mat-checkbox [(ngModel)]="column.notNull" name="notnull" style="float: right;margin-top: 0px;">not null
+        <mat-checkbox [(ngModel)]="column.notNull" value="column.notNull" name="notnull"
+          [ngModelOptions]="{standalone: true}" style="float: right;margin-top: 0px;">not null
         </mat-checkbox>
-        <mat-checkbox [(ngModel)]="column.unique" name="unique" style="margin-left: 10px;float:right;margin-top: 0px;">
+        <mat-checkbox [(ngModel)]="column.unique" value="column.unique" name="unique"
+          [ngModelOptions]="{standalone: true}" style="margin-left: 10px;float:right;margin-top: 0px;">
           unique
         </mat-checkbox>
-        <mat-checkbox [(ngModel)]="column.primaryKey" name="primarykey"
-          style="margin-left: 10px;float: right;margin-top: 0px;">
+        <mat-checkbox [(ngModel)]="column.primaryKey" value="column.primaryKey" name="primarykey"
+          [ngModelOptions]="{standalone: true}" style="margin-left: 10px;float: right;margin-top: 0px;">
           primaykey</mat-checkbox>
         <div class="margin-left:20px;">
-          <button mat-raised-button color="warn" (click)="deleteColumn(column.index)"
+          <button mat-raised-button color="warn" (click)="deleteUpdateColumn(column.index)"
             style="margin-left:20px;width: 40px !important;min-width: unset!important;height: 30px;">X</button>
         </div>
       </mat-list-item>

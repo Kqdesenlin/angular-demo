@@ -268,7 +268,7 @@ export class TextAreaComponent implements OnInit {
     for (let var5 = 0; var5 < oldUpdateTableColumn.length; ++var5) {
       let var6 = 0;
       for (; var6 < this.selectUpdateTable.columns.length; ++var6) {
-        if
+
       }
     }
   }
