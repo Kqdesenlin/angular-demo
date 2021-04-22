@@ -5,6 +5,8 @@
     <button class="add-button" mat-raised-button (click)="createTable()">建表</button>
     <button class="add-button" mat-raised-button (click)="updateTable()">修改表结构</button>
     <button class="add-button" mat-raised-button (click)="submit()">提交</button>
+    <button class="add-button" mat-raised-button (click)="downlandSqlFile()">下载sql文件</button>
+    <button class="add-button" mat-raised-button (click)="downlandDataFile()">下载data文件</button>
   </div>
   <mat-form-field class="textarea-full-width" *ngIf="showScan">
     <mat-label style="font-size: 20px;">SQL</mat-label>

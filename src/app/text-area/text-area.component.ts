@@ -101,6 +101,16 @@ export class TextAreaComponent implements OnInit {
     this.showUpdateTable = true;
   }
 
+  downlandSqlFile() {
+    this.httpService.getSqlFile().subscribe(data => {
+      console.log(data);
+    });
+  }
+
+  downlandDataFile() {
+
+  }
+
 
 
   addColumn() {
@@ -208,7 +218,7 @@ export class TextAreaComponent implements OnInit {
   }
 
   setTable() {
-    let updateSql = "alter table " + this.selectTableName;
+    let updateSql = "alter table " + this.selectTableName + " ";
     let oldUpdateTableColumn: ColumnInfoDto[] = [];
     for (let var1 = 0; var1 < this.getUpdateTable.length; ++var1) {
       if (this.getUpdateTable[var1].name == this.selectTableName) {
@@ -216,6 +226,7 @@ export class TextAreaComponent implements OnInit {
       }
     }
     console.log(oldUpdateTableColumn);
+
     //先删
     for (let var1 = 0; var1 < oldUpdateTableColumn.length; ++var1) {
       let var2 = 0;
@@ -236,7 +247,7 @@ export class TextAreaComponent implements OnInit {
     for (let var3 = 0; var3 < oldUpdateTableColumn.length; ++var3) {
       let var4 = 0;
       for (; var4 < this.selectUpdateTable.columns.length; ++var4) {
-        if (oldUpdateTableColumn[3].columnName == this.selectUpdateTable.columns[var4].columnName) {
+        if (oldUpdateTableColumn[var3].columnName == this.selectUpdateTable.columns[var4].columnName) {
           let tempAlterSql: string = "alter column " + this.selectUpdateTable.columns[var4].columnName;
           let type = this.selectUpdateTable.columns[var4].columnType;
           let parameter = this.selectUpdateTable.columns[var4].columnArgument;
@@ -265,13 +276,49 @@ export class TextAreaComponent implements OnInit {
       }
     }
     //最后添加
-    for (let var5 = 0; var5 < oldUpdateTableColumn.length; ++var5) {
+    for (let var5 = 0; var5 < this.selectUpdateTable.columns.length; ++var5) {
       let var6 = 0;
-      for (; var6 < this.selectUpdateTable.columns.length; ++var6) {
+      for (; var6 < oldUpdateTableColumn.length; ++var6) {
+        if (this.selectUpdateTable.columns[var5].columnName == oldUpdateTableColumn[var6].columnName) {
+          break;
+        }
+      }
+      if (var6 == oldUpdateTableColumn.length) {
+        let tempAddSql: string = "add column " + this.selectUpdateTable.columns[var5].columnName;
+        let type = this.selectUpdateTable.columns[var5].columnType;
+        let parameter = this.selectUpdateTable.columns[var5].columnArgument;
+        tempAddSql = tempAddSql + " " + type;
+        //添加类型
+        if (type == 'VARCHAR' || type == 'CHAR') {
+          if (parameter != null) {
+            tempAddSql = tempAddSql.concat("(" + parameter + ") ");
+          } else {
+            tempAddSql = tempAddSql.concat("(" + "10" + ") ");
+          }
+        } else {
+          tempAddSql = tempAddSql + " ";
+        }
 
+        //添加特殊类型
+        if (true == this.selectUpdateTable.columns[var5].notNull) {
+          tempAddSql = tempAddSql.concat("not null ");
+        }
+        if (true == this.selectUpdateTable.columns[var5].unique) {
+          tempAddSql = tempAddSql.concat("unique ");
+        }
+        tempAddSql = tempAddSql.concat(",");
+        updateSql = updateSql.concat(tempAddSql);
       }
     }
+    if (updateSql.charAt(updateSql.length - 1) == ',') {
+      updateSql = updateSql.substring(0, updateSql.length - 1);
+    }
+    updateSql = updateSql + ";";
+    console.log(updateSql);
+    this.sendSql(updateSql);
+    this.handleGetUpdateTable();
   }
+
   openDialog(input: string): void {
     const dialogRef = this.dialog.open(DialogOverviewDialog, {
       data: input

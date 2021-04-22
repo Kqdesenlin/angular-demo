@@ -8,8 +8,8 @@ const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
     Authorization: 'my-auth-token',
-    'Connection': 'keep-alive'
-  })
+  }),
+  withCredentials: true
 };
 @Injectable()
 export class HttpGetService {
@@ -25,7 +25,7 @@ export class HttpGetService {
       .set("sql", sql);
 
     let temp: OperateResult;
-    this.http.post<OperateResult>(this.getSqlPath, { "sql": sql }, httpOptions)
+    this.http.post<OperateResult>(this.getSqlPath, { "sql": sql, httpOptions })
       .subscribe((data: OperateResult) => {
         temp.info = data.info;
         temp.rtn = data.rtn;
@@ -41,5 +41,9 @@ export class HttpGetService {
   }
   getUpdateTableData() {
     return this.http.get<UpdateTableInfo[]>("http://localhost:8080/api/updatedata");
+  }
+
+  getSqlFile() {
+    return this.http.get("http://localhost:8080/file/download/sqlfile", httpOptions);
   }
 }
